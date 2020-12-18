@@ -8,6 +8,7 @@ import org.vermeg.bookstore.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200" )
 @RequestMapping("/api/book")
 
 public class BookController {
@@ -50,10 +52,9 @@ public class BookController {
 	}
 
 	//Method to update a book
-	@RequestMapping(value = "/updateBook/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public String updateBook(@PathVariable("id") long id,Model model) {
-		 model.addAttribute("book", this.bookService.getBook(id));
-	        model.addAttribute("listOfBooks", this.bookService.getAllBooks());
+	@RequestMapping(value = "/updateBook", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public String updateBook(@RequestBody Book model) {
+			this.bookService.updateBook(model);
 	        return "bookDetails";
 	}
 
@@ -70,7 +71,7 @@ public class BookController {
 	//of a list of books, this method takes as input a list of the
 	//identifiers of the books.
 	
-	@RequestMapping(value = "/totalprice", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/totalprice", method = RequestMethod.POST, produces = "application/json")
 	
 	 public double TotalPriceListBook(@RequestBody List<Integer> book) {
 		    double Total=0;
